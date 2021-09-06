@@ -17,3 +17,5 @@ export const DB_SUB_CLI_DIR_DEV = devProd('src/subscriber', '');
 export const DB_ENTITIES_CLI_DIR_PROD = devProd('build/entity', '');
 export const DB_MIGRATION_CLI_DIR_PROD = devProd('build/migration', '');
 export const DB_SUB_CLI_DIR_PROD = devProd('build/subscriber', '');
+
+export const JWT_SECRET = process.env.JWT_SECRET!;

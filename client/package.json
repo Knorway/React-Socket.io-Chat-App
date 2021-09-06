@@ -3,6 +3,7 @@
 	"version": "0.1.0",
 	"private": true,
 	"scripts": {
+		"lint": "next lint",
 		"dev": "next dev",
 		"build": "next build",
 		"start": "next start"
@@ -11,17 +12,24 @@
 		"@chakra-ui/react": "^1.6.6",
 		"@emotion/react": "^11.4.1",
 		"@emotion/styled": "^11.3.0",
+		"@reduxjs/toolkit": "^1.6.1",
 		"axios": "^0.21.1",
+		"formik": "^2.2.9",
 		"framer-motion": "^4.1.17",
 		"next": "11.1.0",
+		"next-redux-wrapper": "^7.0.2",
 		"react": "17.0.2",
 		"react-dom": "17.0.2",
 		"react-icons": "^4.2.0",
-		"socket.io-client": "^2.4.0"
+		"react-redux": "^7.2.4",
+		"socket.io-client": "^2.4.0",
+		"yup": "^0.32.9"
 	},
 	"devDependencies": {
 		"@types/react": "^17.0.19",
 		"@types/socket.io-client": "^1.4.36",
+		"eslint": "7.32.0",
+		"eslint-config-next": "11.1.0",
 		"typescript": "^4.3.5"
 	}
 }

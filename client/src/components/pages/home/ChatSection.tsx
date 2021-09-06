@@ -1,7 +1,28 @@
-import { Box, Button, Flex, IconButton, Input } from '@chakra-ui/react';
+import { Box, Flex, IconButton, Input, Text } from '@chakra-ui/react';
+import { KeyboardEventHandler, useMemo, useState } from 'react';
 import { RiSendPlaneFill } from 'react-icons/ri';
+import { useAppDispatch, useAppSelector } from '../../../store';
 
 function ChatSection() {
+	const [input, setInput] = useState('');
+	const socket = useAppSelector((state) => state.socket.socket);
+	const currentRoom = useAppSelector((state) => state.room.current);
+	const rooms = useAppSelector((state) => state.room.rooms);
+	const dispatch = useAppDispatch();
+
+	const thisRoom = useMemo(
+		() => rooms.find((room) => room.uuid === currentRoom),
+		[currentRoom, rooms]
+	);
+
+	// console.log('chat');
+
+	const submitChat: KeyboardEventHandler<HTMLInputElement> = (e) => {
+		if (e.key !== 'Enter' || !socket) return;
+		socket.emit('message-add', { roomId: currentRoom, data: input });
+		setInput('');
+	};
+
 	return (
 		<Flex
 			border='1px solid'
@@ -12,7 +33,13 @@ function ChatSection() {
 			flexDir='column'
 			justifyContent='space-between'
 		>
-			<Box>{/* Chat */}</Box>
+			<Box overflowY='auto'>
+				{thisRoom?.messages.map((msg: any) => (
+					<Box key={msg.uuid}>
+						<Text>{msg.message}</Text>
+					</Box>
+				))}
+			</Box>
 			<Flex borderTop='1px solid' borderTopColor='gray.400' borderTopRadius='none'>
 				<Input
 					placeholder='Enter your message...'
@@ -23,6 +50,9 @@ function ChatSection() {
 						boxShadow: '0 0 0 2px #3182ce;',
 						zIndex: '1',
 					}}
+					value={input}
+					onChange={(e) => setInput(e.target.value)}
+					onKeyPress={submitChat}
 				/>
 				<IconButton
 					icon={<RiSendPlaneFill />}

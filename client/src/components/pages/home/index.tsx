@@ -1,24 +1,26 @@
+import { useRouter } from 'next/router';
 import { Box, Flex, Text } from '@chakra-ui/react';
-import { useEffect, useState } from 'react';
-import socketIO from 'socket.io-client';
+import { useEffect } from 'react';
+import { useInitializeSocket } from '../../../hooks/useInitializeSocket';
+import { useAuth } from '../../../hooks/useAuth';
 import ChatSection from './ChatSection';
-import GroupSection from './GroupSection';
+import RoomSection from './RoomSection';
 import UserListSection from './UserListSection';
+import { useAppSelector } from '../../../store';
 
 function HomePage() {
-	const [count, setCount] = useState(0);
+	useInitializeSocket();
+	const socket = useAppSelector((state) => state.socket.socket);
+	const allSockets = useAppSelector((state) => state.socket.allSockets);
+	const { user, isValidating } = useAuth();
+	const router = useRouter();
 
 	useEffect(() => {
-		const ws = socketIO('http://localhost:4000', { transports: ['websocket'] });
+		if (!user && !isValidating) router.push('/login');
+	}, [isValidating, router, user]);
 
-		ws.on('connect', () => {
-			console.log(ws.id);
-		});
-
-		return () => {
-			ws.close();
-		};
-	}, []);
+	if (!socket) return null;
+	if (!user) return null;
 
 	return (
 		<Box>
@@ -29,7 +31,7 @@ function HomePage() {
 				color='black'
 				textAlign='center'
 			>
-				Active Sockets: {count}
+				{`Active Sockets: ${allSockets}`}
 			</Text>
 			<Flex
 				w={['90%', '90%', '90%', '100%', '82%']}
@@ -38,7 +40,7 @@ function HomePage() {
 				px='1rem'
 				flexDir={['column', 'column', 'column', 'row']}
 			>
-				<GroupSection />
+				<RoomSection />
 				<ChatSection />
 				<UserListSection />
 			</Flex>

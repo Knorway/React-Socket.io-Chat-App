@@ -1,4 +1,5 @@
 import { createConnection } from 'typeorm';
+import { Room } from '../entity/Room';
 import * as CONFIG from './constants';
 
 export async function ConnectTypeORM() {
@@ -31,4 +32,13 @@ export async function ConnectTypeORM() {
 	});
 
 	console.log(`TypeORM connection to MySQL: ${conn.isConnected}`);
+
+	seed();
+}
+
+async function seed() {
+	if (!(await Room.findOne({ where: { title: 'open chat' } }))) {
+		const room = Room.create({ title: 'open chat' });
+		await Room.insert(room);
+	}
 }

@@ -1,7 +1,11 @@
-import '../styles/globals.css';
 import { ChakraProvider } from '@chakra-ui/react';
+import { AppProps } from 'next/dist/shared/lib/router/router';
+import { useInitializeAuth } from '../src/hooks/useInitializeAuth';
+import wrapper from '../src/store';
 
-function MyApp({ Component, pageProps }) {
+function Application({ Component, pageProps }: AppProps) {
+	useInitializeAuth();
+
 	return (
 		<ChakraProvider>
 			<Component {...pageProps} />
@@ -9,4 +13,4 @@ function MyApp({ Component, pageProps }) {
 	);
 }
 
-export default MyApp;
+export default wrapper.withRedux(Application);
