@@ -4,12 +4,16 @@ interface RoomState {
 	rooms: any[];
 	current: string;
 	messages: any[];
+	lastMessage: string;
+	checked: boolean;
 }
 
 const initialState: RoomState = {
 	rooms: [],
 	current: '',
 	messages: [],
+	lastMessage: '',
+	checked: false,
 };
 
 const roomSlice = createSlice({
@@ -31,14 +35,13 @@ const roomSlice = createSlice({
 		},
 		mutateMessages: (state, { payload }) => {
 			switch (payload.meta) {
-				case 'add': {
+				case 'add':
 					for (const room of state.rooms) {
 						if (room.uuid === payload.data.roomId) {
 							room.messages.push(payload.data.data);
 							return;
 						}
 					}
-				}
 			}
 		},
 	},

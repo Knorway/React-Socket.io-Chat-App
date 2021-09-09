@@ -2,7 +2,7 @@ import { createConnection } from 'typeorm';
 import { Room } from '../entity/Room';
 import * as CONFIG from './constants';
 
-export async function ConnectTypeORM() {
+export async function connectTypeORM() {
 	const conn = await createConnection({
 		type: 'mysql',
 		host: 'localhost',

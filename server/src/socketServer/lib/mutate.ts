@@ -1,5 +1,6 @@
 import { io } from '../../app';
 import { User } from '../../entity/User';
+import { GET_OPEN_CHAT } from './utils';
 
 type SuffixType = 'set' | 'update' | 'add' | 'remove';
 type MutateFunction = (socket: SocketIO.Socket, payload: any, suffix: SuffixType) => void;
@@ -22,27 +23,14 @@ export const mutateUsers: MutateFunction = (socket, users, suffix) => {
 };
 
 export const mutateActives: MutateFunction = async (socket, payload, suffix) => {
-	const openChat = socket.user.getOpenChat();
-	const openChatId = openChat?.uuid as string;
-	const OPEN_CHAT = io.sockets.adapter.rooms[openChatId] as any;
-	if (!OPEN_CHAT) return;
-
 	switch (suffix) {
 		case 'set':
-			io.emit(`active-${suffix}`, OPEN_CHAT.actives);
-			return;
-
-		case 'update':
-			OPEN_CHAT.actives = OPEN_CHAT.actives.filter(
-				(active: string) => active !== socket.user.uuid
-			);
-			io.emit(`active-${suffix}`, OPEN_CHAT.actives);
+			io.emit(`active-${suffix}`, payload);
 			return;
 	}
 };
 
 export const initialize = async (socket: SocketIO.Socket) => {
-	const openChat = socket.user.getOpenChat();
 	const rooms = await User.getAllRoomsOf(socket.user.id);
 	const users = await User.find({});
 
@@ -52,7 +40,9 @@ export const initialize = async (socket: SocketIO.Socket) => {
 
 	rooms.forEach((room) => socket.join(room.uuid));
 
-	const OPEN_CHAT = io.sockets.adapter.rooms[openChat!.uuid] as any;
+	const OPEN_CHAT = GET_OPEN_CHAT(socket);
+	if (!OPEN_CHAT) return;
+
 	if (!OPEN_CHAT.actives) {
 		OPEN_CHAT.actives = [socket.user.uuid];
 	} else {
@@ -61,7 +51,11 @@ export const initialize = async (socket: SocketIO.Socket) => {
 
 	mutateRooms(socket, rooms, 'set');
 	mutateUsers(socket, users, 'set');
-	mutateActives(socket, null, 'set');
+	mutateActives(socket, OPEN_CHAT.actives, 'set');
 };
 
 export const cleanUp = async () => {};
+
+interface Result {
+	name: string;
+}

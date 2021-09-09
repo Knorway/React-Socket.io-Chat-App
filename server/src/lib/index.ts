@@ -17,7 +17,7 @@ export const generateToken = (id: string) => jwt.sign({ id }, JWT_SECRET);
 
 export const jwtAuth = async (req: Request, res: Response, next: NextFunction) => {
 	if (!req.headers.authorization || !req.headers.authorization.startsWith('Bearer')) {
-		res.status(404);
+		res.status(403);
 		next(new Error('no token'));
 		return;
 	}
@@ -27,7 +27,7 @@ export const jwtAuth = async (req: Request, res: Response, next: NextFunction) =
 	const user = await User.findOne({ where: { uuid: decoded.id } });
 
 	if (!user) {
-		res.status(404);
+		res.status(403);
 		next(new Error('authorization failed while decoding given token'));
 		return;
 	}

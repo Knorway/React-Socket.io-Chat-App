@@ -18,7 +18,7 @@ export const jwtAuth = async (socket: SocketIO.Socket, next: (err?: any) => void
 
 		socket.user = user;
 		next();
-	} catch (error) {
+	} catch (error: any) {
 		console.log(error.message, 'socket.io auth middleware error');
 		next(error);
 	}

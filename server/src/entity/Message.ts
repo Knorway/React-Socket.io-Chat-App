@@ -9,11 +9,11 @@ export class Message extends BaseModel {
 	message!: string;
 
 	// -> User
-	@ManyToOne((type) => User, (user) => user.messages)
+	@ManyToOne((type) => User, (user) => user.messages, { onDelete: 'CASCADE' })
 	user!: User;
 
 	// -> Room
-	@ManyToOne((type) => Room, (room) => room.messages)
+	@ManyToOne((type) => Room, (room) => room.messages, { onDelete: 'CASCADE' })
 	room!: Room;
 
 	async setRoom(room: Room) {

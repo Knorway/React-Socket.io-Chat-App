@@ -3,15 +3,13 @@ dotenv.config();
 
 import 'reflect-metadata';
 import { app, io, server } from './app';
-import { ConnectTypeORM } from './config/db';
-import { SocketServer } from './socketServer';
+import { connectTypeORM } from './config/db';
+import { socketServer } from './socketServer';
 
 const bootstrap = async () => {
 	try {
-		await ConnectTypeORM();
-
-		SocketServer(io);
-
+		await connectTypeORM();
+		socketServer(io);
 		server.listen(app.get('port'), () => {
 			console.log(`ON! -> http://localhost:${app.get('port')}`);
 		});

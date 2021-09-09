@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import io from 'socket.io-client';
 import { API_URL } from '../api';
-import { useAppDispatch, useAppSelector } from '../store';
+import { useAppDispatch } from '../store';
 import { roomActions } from '../store/room';
 import { socketActions } from '../store/socket';
 import { userActions } from '../store/user';
@@ -54,10 +54,6 @@ export function useInitializeSocket() {
 		// ACTIVE
 		socket.on('active-set', (data: any) => {
 			dispatch(userActions.mutateActives({ data, meta: 'set' }));
-		});
-
-		socket.on('active-remove', (data: any) => {
-			dispatch(userActions.mutateActives({ data, meta: 'remove' }));
 		});
 
 		socket.on('active-update', (data: any) => {

@@ -1,17 +1,17 @@
-import { useRouter } from 'next/router';
-import { Box, Flex, Text } from '@chakra-ui/react';
 import { useEffect } from 'react';
-import { useInitializeSocket } from '../../../hooks/useInitializeSocket';
+import { useRouter } from 'next/router';
+import { Box, Flex } from '@chakra-ui/react';
 import { useAuth } from '../../../hooks/useAuth';
-import ChatSection from './ChatSection';
-import RoomSection from './RoomSection';
-import UserListSection from './UserListSection';
+import { useInitializeSocket } from '../../../hooks/useInitializeSocket';
 import { useAppSelector } from '../../../store';
+import ChatSection from './ChatSection';
+import DebugInfo from './DebugInfo';
+import RoomSection from './RoomSection';
+import UserListSection from './userListSection';
 
 function HomePage() {
 	useInitializeSocket();
 	const socket = useAppSelector((state) => state.socket.socket);
-	const allSockets = useAppSelector((state) => state.socket.allSockets);
 	const { user, isValidating } = useAuth();
 	const router = useRouter();
 
@@ -24,15 +24,7 @@ function HomePage() {
 
 	return (
 		<Box>
-			<Text
-				as='h1'
-				fontSize='3xl'
-				fontWeight='extrabold'
-				color='black'
-				textAlign='center'
-			>
-				{`Active Sockets: ${allSockets}`}
-			</Text>
+			<DebugInfo />
 			<Flex
 				w={['90%', '90%', '90%', '100%', '82%']}
 				h='90vh'

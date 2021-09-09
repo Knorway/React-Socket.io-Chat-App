@@ -2,12 +2,9 @@ import { Message } from '../entity/Message';
 import { Room } from '../entity/Room';
 import { jwtAuth } from './lib/middlewares';
 import { initialize, mutateActives, mutateRooms } from './lib/mutate';
+import { GET_OPEN_CHAT } from './lib/utils';
 
-// socket.io 에러핸들링
-// 룸 생성후 클릭하면 에러뜸
-// 유저 클릭해서 방 생성하기 -> 삭제하기 -> 다른 유저 초대하기
-
-export const SocketServer = (io: SocketIO.Server) => {
+export const socketServer = (io: SocketIO.Server) => {
 	io.use(jwtAuth);
 
 	io.on('connection', async (socket) => {
@@ -16,12 +13,21 @@ export const SocketServer = (io: SocketIO.Server) => {
 
 		initialize(socket);
 
-		// Preserved Event Handlers //
+		// Preserved Event Handlers
 		socket.on('disconnect', async () => {
 			console.log(socket.id, `[${socket.user.name}]`, 'disconnected');
 			console.log('all sockets left: ', Object.keys(io.sockets.sockets).length);
 
-			mutateActives({ user: socket.user } as SocketIO.Socket, null, 'update');
+			const OPEN_CHAT = GET_OPEN_CHAT(socket);
+			if (!OPEN_CHAT) return;
+
+			OPEN_CHAT.actives.splice(OPEN_CHAT.actives.indexOf(socket.user.uuid), 1);
+
+			mutateActives(
+				{ user: socket.user } as SocketIO.Socket,
+				OPEN_CHAT.actives,
+				'set'
+			);
 		});
 
 		socket.on('error', (error) => {
@@ -52,9 +58,12 @@ export const SocketServer = (io: SocketIO.Server) => {
 
 		socket.on('room-add', async (data) => {
 			const newRoom = await Room.create({ title: data }).save();
-			await socket.user.setRoom(newRoom);
-			const payload = { ...newRoom, users: [socket.user] };
+			socket.join(newRoom.uuid);
+			newRoom.messages = [];
 
+			await socket.user.setRoom(newRoom);
+
+			const payload = { ...newRoom, users: [socket.user] };
 			mutateRooms(socket, payload, 'add');
 		});
 	});

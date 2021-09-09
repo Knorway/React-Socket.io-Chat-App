@@ -19,7 +19,7 @@ export class User extends BaseModel {
 	rooms!: Room[];
 
 	// -> Message
-	@OneToMany((type) => Message, (message) => message.user, { cascade: true })
+	@OneToMany((type) => Message, (message) => message.user)
 	messages!: Message[];
 
 	static async getAllRoomsOf(userId: number) {

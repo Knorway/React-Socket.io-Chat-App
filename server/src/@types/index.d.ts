@@ -10,5 +10,8 @@ declare global {
 		interface Socket {
 			user: UserModel;
 		}
+		interface Room {
+			actives: string[];
+		}
 	}
 }

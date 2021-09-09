@@ -34,7 +34,7 @@ function ChatSection() {
 			justifyContent='space-between'
 		>
 			<Box overflowY='auto'>
-				{thisRoom?.messages.map((msg: any) => (
+				{thisRoom?.messages?.map((msg: any) => (
 					<Box key={msg.uuid}>
 						<Text>{msg.message}</Text>
 					</Box>

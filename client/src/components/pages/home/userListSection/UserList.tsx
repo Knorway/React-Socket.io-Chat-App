@@ -1,23 +1,20 @@
-import { Avatar, AvatarBadge, Box, Flex } from '@chakra-ui/react';
+import { Avatar, AvatarBadge } from '@chakra-ui/avatar';
+import { Box, Flex } from '@chakra-ui/layout';
 import { Fragment } from 'react';
-import { useAppSelector } from '../../../store';
+import { useAppSelector } from '../../../../store';
 
-function UserListSection() {
-	const users = useAppSelector((state) => state.user.users);
+interface IUserList {
+	users: any[];
+	toggleUser: (toggle: boolean, user?: any) => void;
+}
+
+function UserList({ users, toggleUser }: IUserList) {
 	const actives = useAppSelector((state) => state.user.actives);
-	console.log(users);
-	console.log(actives);
 
 	if (!users.length || !actives) return null;
 
 	return (
-		<Box
-			border='1px solid'
-			borderColor='gray.400'
-			flex='1'
-			minH='20vh'
-			overflowY='auto'
-		>
+		<>
 			{users.map((user: any) => (
 				<Fragment key={user.uuid}>
 					<Flex flexDir='column'>
@@ -26,6 +23,7 @@ function UserListSection() {
 							alignItems='center'
 							borderBottom='1px solid'
 							borderBottomColor='gray.200'
+							onClick={() => toggleUser(true, user)}
 						>
 							<Avatar
 								src='https://avataaars.io/?avatarStyle=Transparent&topType=ShortHairShortWaved&accessoriesType=Kurt&hairColor=BrownDark&facialHairType=BeardLight&facialHairColor=Black&clotheType=ShirtVNeck&clotheColor=Blue01&eyeType=Hearts&eyebrowType=DefaultNatural&mouthType=Smile&skinColor=Yellow'
@@ -44,10 +42,11 @@ function UserListSection() {
 							<Box ml='3'>{user.name}</Box>
 						</Flex>
 					</Flex>
+					<Box></Box>
 				</Fragment>
 			))}
-		</Box>
+		</>
 	);
 }
 
-export default UserListSection;
+export default UserList;
