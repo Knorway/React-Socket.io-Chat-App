@@ -37,10 +37,9 @@ const roomSlice = createSlice({
 			switch (payload.meta) {
 				case 'add':
 					for (const room of state.rooms) {
-						if (room.uuid === payload.data.roomId) {
-							room.messages.push(payload.data.data);
-							return;
-						}
+						if (room.uuid !== payload.data.roomId) continue;
+						room.messages.push(payload.data.data);
+						return;
 					}
 			}
 		},

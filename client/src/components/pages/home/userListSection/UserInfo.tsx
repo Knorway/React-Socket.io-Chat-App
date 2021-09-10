@@ -1,21 +1,52 @@
+import { Dispatch } from 'react';
 import { Avatar } from '@chakra-ui/avatar';
 import { IconButton } from '@chakra-ui/button';
 import { Box, Flex, Text } from '@chakra-ui/layout';
 import { BsFillChatFill } from 'react-icons/bs';
 import { IoIosArrowBack } from 'react-icons/io';
+import { IinitialState } from '.';
+import { useAppDispatch, useAppSelector } from '../../../../store';
+import { roomActions } from '../../../../store/room';
 
 interface IUserInfo {
-	toggledUser: any;
-	toggleUser: (toggle: boolean, user?: any) => void;
+	userTabUser: any;
+	tabDispatch: Dispatch<IinitialState>;
 }
 
-function UserInfo({ toggleUser, toggledUser: user }: IUserInfo) {
+function UserInfo({ tabDispatch, userTabUser: user }: IUserInfo) {
+	const socket = useAppSelector((state) => state.socket.socket);
+	const me = useAppSelector((state) => state.auth.user);
+	const actives = useAppSelector((state) => state.user.actives);
+	const rooms = useAppSelector((state) => state.room.rooms);
+	const dispatch = useAppDispatch();
+
+	const createRoom = () => {
+		const roomExists = rooms.find(({ users }) => {
+			if (users.length !== 2) return false;
+			return users.every(
+				({ uuid }: { uuid: string }) => uuid === me?.uuid || uuid === user.uuid
+			);
+		});
+
+		if (roomExists) {
+			dispatch(roomActions.setCurrentRoom(roomExists.uuid));
+			return;
+		}
+
+		const socketIds = actives
+			.filter(({ userId }) => userId === me?.uuid || userId === user.uuid)
+			.map(({ socketId }) => socketId);
+
+		socket?.emit('room-add', { userIds: [me?.uuid, user.uuid], socketIds });
+		// setCurrentRoom 나만
+	};
+
 	if (!user) return null;
 
 	return (
 		<Box h='90%'>
 			<Box
-				onClick={() => toggleUser(false, null)}
+				onClick={() => tabDispatch({ toggled: false, user: null })}
 				cursor='pointer'
 				p='3'
 				display='flex'
@@ -24,8 +55,14 @@ function UserInfo({ toggleUser, toggledUser: user }: IUserInfo) {
 				borderBottomColor='gray.300'
 				mb={['8', '8', '8', '0']}
 			>
-				<IoIosArrowBack style={{ display: 'inline' }} />
-				<Text display='inline-block' ml='5px' fontSize='15px' color='blue.500'>
+				<IoIosArrowBack style={{ display: 'inline' }} color='#3182ce' />
+				<Text
+					display='inline-block'
+					ml='5px'
+					fontSize='15px'
+					color='blue.500'
+					pb='0.5'
+				>
 					전체 유저
 				</Text>
 			</Box>
@@ -48,8 +85,7 @@ function UserInfo({ toggleUser, toggledUser: user }: IUserInfo) {
 						aria-label='chat-button'
 						icon={<BsFillChatFill />}
 						borderRadius='50%'
-						// 여기서 정보 보내서 방 생성하고 후속조치 하면 된다
-						onClick={() => {}}
+						onClick={createRoom}
 					/>
 				</Box>
 			</Flex>

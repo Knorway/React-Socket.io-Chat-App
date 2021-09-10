@@ -39,11 +39,17 @@ export function useInitializeSocket() {
 
 		socket.on('room-add', (data: any) => {
 			dispatch(roomActions.mutateRooms({ data, meta: 'add' }));
+			dispatch(roomActions.setCurrentRoom(data.uuid));
 		});
 
 		// USER
 		socket.on('user-set', (data: any) => {
-			dispatch(userActions.mutateUser({ users: data, meta: 'set' }));
+			dispatch(userActions.mutateUser({ data, meta: 'set' }));
+		});
+
+		// SOCKETID
+		socket.on('socketId-update', (data: any) => {
+			dispatch(userActions.mutateSocketId({ data, meta: 'update' }));
 		});
 
 		// MESSAGE

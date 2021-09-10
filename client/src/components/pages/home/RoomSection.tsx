@@ -1,22 +1,12 @@
-import { Box, Button, Flex, Input, Text } from '@chakra-ui/react';
 import { useEffect } from 'react';
-import { ChangeEventHandler } from 'react';
-import { useState } from 'react';
+import { Box, Flex, Text } from '@chakra-ui/react';
 import { useAppDispatch, useAppSelector } from '../../../store';
 import { roomActions } from '../../../store/room';
 
 function RoomSection() {
-	const [roomName, setRoomName] = useState('');
-	const socket = useAppSelector((state) => state.socket.socket);
 	const rooms = useAppSelector((state) => state.room.rooms);
 	const currentRoom = useAppSelector((state) => state.room.current);
 	const dispatch = useAppDispatch();
-
-	const createRoom: ChangeEventHandler<HTMLInputElement> = (e) => {
-		e.preventDefault();
-		socket?.emit('room-add', roomName);
-		setRoomName('');
-	};
 
 	useEffect(() => {
 		if (!rooms.length || currentRoom) return;
@@ -69,12 +59,11 @@ function RoomSection() {
 					</Box>
 				))}
 			</Flex>
-			<Flex
+			{/* <Flex
 				borderTop='1px solid'
 				borderTopColor='gray.400'
 				borderTopRadius='none'
 				as='form'
-				onSubmit={createRoom}
 			>
 				<Input
 					value={roomName}
@@ -95,7 +84,7 @@ function RoomSection() {
 				>
 					+
 				</Button>
-			</Flex>
+			</Flex> */}
 		</Flex>
 	);
 }

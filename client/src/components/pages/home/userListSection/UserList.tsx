@@ -1,14 +1,15 @@
 import { Avatar, AvatarBadge } from '@chakra-ui/avatar';
 import { Box, Flex } from '@chakra-ui/layout';
-import { Fragment } from 'react';
+import { Dispatch, Fragment } from 'react';
+import { IinitialState } from '.';
 import { useAppSelector } from '../../../../store';
 
 interface IUserList {
 	users: any[];
-	toggleUser: (toggle: boolean, user?: any) => void;
+	tabDispatch: Dispatch<IinitialState>;
 }
 
-function UserList({ users, toggleUser }: IUserList) {
+function UserList({ users, tabDispatch }: IUserList) {
 	const actives = useAppSelector((state) => state.user.actives);
 
 	if (!users.length || !actives) return null;
@@ -23,7 +24,7 @@ function UserList({ users, toggleUser }: IUserList) {
 							alignItems='center'
 							borderBottom='1px solid'
 							borderBottomColor='gray.200'
-							onClick={() => toggleUser(true, user)}
+							onClick={() => tabDispatch({ toggled: true, user })}
 						>
 							<Avatar
 								src='https://avataaars.io/?avatarStyle=Transparent&topType=ShortHairShortWaved&accessoriesType=Kurt&hairColor=BrownDark&facialHairType=BeardLight&facialHairColor=Black&clotheType=ShirtVNeck&clotheColor=Blue01&eyeType=Hearts&eyebrowType=DefaultNatural&mouthType=Smile&skinColor=Yellow'
@@ -32,7 +33,7 @@ function UserList({ users, toggleUser }: IUserList) {
 							>
 								<AvatarBadge
 									bg={
-										actives.indexOf(user.uuid) !== -1
+										actives.find(({ userId }) => userId === user.uuid)
 											? 'green.400'
 											: 'red.400'
 									}

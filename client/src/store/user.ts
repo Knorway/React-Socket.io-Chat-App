@@ -15,7 +15,10 @@ const userSlice = createSlice({
 	initialState,
 	reducers: {
 		mutateUser: (state, { payload }) => {
-			state.users = payload.users;
+			switch (payload.meta) {
+				case 'set':
+					state.users = payload.data;
+			}
 		},
 		mutateActives: (state, { payload }) => {
 			switch (payload.meta) {
@@ -23,6 +26,15 @@ const userSlice = createSlice({
 				case 'update':
 					state.actives = payload.data;
 					return;
+			}
+		},
+		mutateSocketId: (state, { payload }) => {
+			switch (payload.meta) {
+				case 'update':
+					state.users.forEach((user) => {
+						if (user.uuid !== payload.data.userId) return;
+						user.socketId = payload.data.socketId;
+					});
 			}
 		},
 	},

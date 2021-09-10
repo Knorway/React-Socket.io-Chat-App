@@ -1,18 +1,23 @@
-import { useState } from 'react';
+import { Reducer, useReducer } from 'react';
 import { Box } from '@chakra-ui/react';
 import { useAppSelector } from '../../../../store';
 import UserInfo from './UserInfo';
 import UserList from './UserList';
 
-function UserListSection() {
-	const [tabToggled, setTabToggled] = useState(false);
-	const [toggledUser, setToggledUser] = useState(null);
-	const users = useAppSelector((state) => state.user.users);
+export interface IinitialState {
+	toggled: boolean;
+	user: any;
+}
+const initialState: IinitialState = { toggled: false, user: null };
 
-	const handleToggleUser = (toggle: boolean, user?: any) => {
-		setTabToggled(toggle);
-		setToggledUser(user);
-	};
+const reducer: Reducer<IinitialState, IinitialState> = (prev, curr) => ({
+	...prev,
+	...curr,
+});
+
+function UserListSection() {
+	const [tabState, tabDispatch] = useReducer(reducer, initialState);
+	const users = useAppSelector((state) => state.user.users);
 
 	return (
 		<Box
@@ -22,10 +27,10 @@ function UserListSection() {
 			minH='20vh'
 			overflowY={['auto', 'auto', 'auto', 'initial']}
 		>
-			{tabToggled ? (
-				<UserInfo toggleUser={handleToggleUser} toggledUser={toggledUser} />
+			{tabState.toggled ? (
+				<UserInfo tabDispatch={tabDispatch} userTabUser={tabState.user} />
 			) : (
-				<UserList users={users} toggleUser={handleToggleUser} />
+				<UserList users={users} tabDispatch={tabDispatch} />
 			)}
 		</Box>
 	);

@@ -1,7 +1,8 @@
 import { Message } from '../entity/Message';
 import { Room } from '../entity/Room';
+import { User } from '../entity/User';
 import { jwtAuth } from './lib/middlewares';
-import { initialize, mutateActives, mutateRooms } from './lib/mutate';
+import { initialize, mutateActives, mutateRooms, mutateSocketId } from './lib/mutate';
 import { GET_OPEN_CHAT } from './lib/utils';
 
 export const socketServer = (io: SocketIO.Server) => {
@@ -14,6 +15,7 @@ export const socketServer = (io: SocketIO.Server) => {
 		initialize(socket);
 
 		// Preserved Event Handlers
+
 		socket.on('disconnect', async () => {
 			console.log(socket.id, `[${socket.user.name}]`, 'disconnected');
 			console.log('all sockets left: ', Object.keys(io.sockets.sockets).length);
@@ -21,7 +23,10 @@ export const socketServer = (io: SocketIO.Server) => {
 			const OPEN_CHAT = GET_OPEN_CHAT(socket);
 			if (!OPEN_CHAT) return;
 
-			OPEN_CHAT.actives.splice(OPEN_CHAT.actives.indexOf(socket.user.uuid), 1);
+			OPEN_CHAT.actives.splice(
+				OPEN_CHAT.actives.findIndex(({ userId }) => userId === socket.user.uuid),
+				1
+			);
 
 			mutateActives(
 				{ user: socket.user } as SocketIO.Socket,
@@ -57,13 +62,21 @@ export const socketServer = (io: SocketIO.Server) => {
 		});
 
 		socket.on('room-add', async (data) => {
-			const newRoom = await Room.create({ title: data }).save();
-			socket.join(newRoom.uuid);
+			const { userIds, socketIds } = data;
+			const newRoom = await Room.create().save();
+			const users = await User.createQueryBuilder('this')
+				.where('this.uuid IN (:...userIds)', { userIds })
+				.getMany();
+
+			await Room.setUsers(newRoom, users);
 			newRoom.messages = [];
 
-			await socket.user.setRoom(newRoom);
+			socketIds.forEach((socketId: string) => {
+				if (!Object.keys(io.sockets.connected).includes(socketId)) return;
+				io.sockets.sockets[socketId]?.join(newRoom.uuid);
+			});
 
-			const payload = { ...newRoom, users: [socket.user] };
+			const payload = { ...newRoom, users };
 			mutateRooms(socket, payload, 'add');
 		});
 	});

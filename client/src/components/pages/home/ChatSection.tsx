@@ -1,5 +1,5 @@
 import { Box, Flex, IconButton, Input, Text } from '@chakra-ui/react';
-import { KeyboardEventHandler, useMemo, useState } from 'react';
+import { KeyboardEventHandler, useEffect, useMemo, useRef, useState } from 'react';
 import { RiSendPlaneFill } from 'react-icons/ri';
 import { useAppDispatch, useAppSelector } from '../../../store';
 
@@ -10,18 +10,23 @@ function ChatSection() {
 	const rooms = useAppSelector((state) => state.room.rooms);
 	const dispatch = useAppDispatch();
 
+	const inputRef = useRef<HTMLInputElement>(null);
+
 	const thisRoom = useMemo(
 		() => rooms.find((room) => room.uuid === currentRoom),
 		[currentRoom, rooms]
 	);
-
-	// console.log('chat');
 
 	const submitChat: KeyboardEventHandler<HTMLInputElement> = (e) => {
 		if (e.key !== 'Enter' || !socket) return;
 		socket.emit('message-add', { roomId: currentRoom, data: input });
 		setInput('');
 	};
+
+	useEffect(() => {
+		if (!inputRef.current) return;
+		inputRef.current.focus();
+	}, [currentRoom]);
 
 	return (
 		<Flex
@@ -42,6 +47,7 @@ function ChatSection() {
 			</Box>
 			<Flex borderTop='1px solid' borderTopColor='gray.400' borderTopRadius='none'>
 				<Input
+					ref={inputRef}
 					placeholder='Enter your message...'
 					_placeholder={{ fontSize: '13px' }}
 					border='none'

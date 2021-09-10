@@ -11,7 +11,7 @@ declare global {
 			user: UserModel;
 		}
 		interface Room {
-			actives: string[];
+			actives: { socketId: string; userId: string }[];
 		}
 	}
 }
