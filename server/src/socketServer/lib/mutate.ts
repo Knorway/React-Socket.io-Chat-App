@@ -23,7 +23,13 @@ export const mutateUsers: MutateFunction = (socket, users, suffix) => {
 };
 
 export const mutateMessages: MutateFunction = (socket, payload, suffix) => {
-	//
+	switch (suffix) {
+		case 'add':
+			io.in(payload.roomId).emit(`message-${suffix}`, {
+				roomId: payload.roomId,
+				data: payload.data,
+			});
+	}
 };
 
 export const mutateActives: MutateFunction = async (socket, payload, suffix) => {

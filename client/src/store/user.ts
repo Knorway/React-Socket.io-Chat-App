@@ -7,7 +7,7 @@ interface UserState {
 
 export interface IUser {
 	uuid: string;
-	socketId: string;
+	socketId?: string;
 	name: string;
 	email: string;
 	[key: string]: any;

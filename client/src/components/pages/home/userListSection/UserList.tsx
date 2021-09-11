@@ -1,16 +1,16 @@
 import { Avatar, AvatarBadge } from '@chakra-ui/avatar';
 import { Box, Flex } from '@chakra-ui/layout';
 import { Dispatch, Fragment } from 'react';
-import { IinitialState } from '.';
+import { initialState } from '.';
 import { useAppSelector } from '../../../../store';
 import { IUser } from '../../../../store/user';
 
-interface IUserList {
+interface UserList {
 	users: IUser[];
-	tabDispatch: Dispatch<IinitialState>;
+	tabDispatch: Dispatch<initialState>;
 }
 
-function UserList({ users, tabDispatch }: IUserList) {
+function UserList({ users, tabDispatch }: UserList) {
 	const actives = useAppSelector((state) => state.user.actives);
 
 	if (!users.length || !actives) return null;

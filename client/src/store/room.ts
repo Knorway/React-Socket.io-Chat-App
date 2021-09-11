@@ -4,20 +4,24 @@ import { IUser } from './user';
 interface RoomState {
 	rooms: IRoom[];
 	current: string;
-	messages: any[];
+	messages: IMessage[];
 	lastMessage: string;
 	checked: boolean;
 }
 
 export interface IRoom {
 	[key: string]: any;
-	title: string;
+	title: string | null;
 	label: string;
 	uuid: string;
 	users: IUser[];
+	messages: IMessage[];
 }
 export interface IMessage {
-	//
+	uuid: string;
+	message: string;
+	username: string;
+	createdAt: any;
 }
 
 const initialState: RoomState = {

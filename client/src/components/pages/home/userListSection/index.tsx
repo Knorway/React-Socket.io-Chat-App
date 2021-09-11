@@ -5,13 +5,13 @@ import UserInfo from './UserInfo';
 import UserList from './UserList';
 import { IUser } from '../../../../store/user';
 
-export interface IinitialState {
+export interface initialState {
 	toggled: boolean;
 	user: IUser | null;
 }
 
-const initialState: IinitialState = { toggled: false, user: null };
-const reducer: Reducer<IinitialState, IinitialState> = (prev, curr) => ({
+const initialState: initialState = { toggled: false, user: null };
+const reducer: Reducer<initialState, initialState> = (prev, curr) => ({
 	...prev,
 	...curr,
 });

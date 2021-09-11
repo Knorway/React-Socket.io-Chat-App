@@ -4,9 +4,9 @@ import { Box, Flex } from '@chakra-ui/react';
 import { useAuth } from '../../../hooks/useAuth';
 import { useInitializeSocket } from '../../../hooks/useInitializeSocket';
 import { useAppSelector } from '../../../store';
-import ChatSection from './ChatSection';
+import ChatSection from './chatSection';
 import DebugInfo from './DebugInfo';
-import RoomSection from './RoomSection';
+import RoomSection from './roomSection';
 import UserListSection from './userListSection';
 
 function HomePage() {

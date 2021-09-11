@@ -4,21 +4,21 @@ import { IconButton } from '@chakra-ui/button';
 import { Box, Flex, Text } from '@chakra-ui/layout';
 import { BsFillChatFill } from 'react-icons/bs';
 import { IoIosArrowBack } from 'react-icons/io';
-import { IinitialState } from '.';
+import { initialState } from '.';
 import { useAppDispatch, useAppSelector } from '../../../../store';
 import { roomActions } from '../../../../store/room';
 import { IUser } from '../../../../store/user';
 
-interface IUserInfo {
+interface UserInfo {
 	userTabUser: IUser | null;
-	tabDispatch: Dispatch<IinitialState>;
+	tabDispatch: Dispatch<initialState>;
 }
 
-function UserInfo({ tabDispatch, userTabUser: user }: IUserInfo) {
+function UserInfo({ tabDispatch, userTabUser: user }: UserInfo) {
 	const socket = useAppSelector((state) => state.socket.socket);
-	const me = useAppSelector((state) => state.auth.user);
-	const actives = useAppSelector((state) => state.user.actives);
 	const rooms = useAppSelector((state) => state.room.rooms);
+	const actives = useAppSelector((state) => state.user.actives);
+	const me = useAppSelector((state) => state.auth.user);
 	const dispatch = useAppDispatch();
 
 	const createRoom = () => {
@@ -37,15 +37,12 @@ function UserInfo({ tabDispatch, userTabUser: user }: IUserInfo) {
 			.map(({ socketId }) => socketId);
 
 		socket?.emit('room-add', { userIds: [me?.uuid, user?.uuid], socketIds });
-		// setCurrentRoom 나만
-		// 방제목
-		// mutateMessages()
 	};
 
 	if (!user) return null;
 
 	return (
-		<Box h='90%'>
+		<Box maxH='90%' h='100%'>
 			<Box
 				onClick={() => tabDispatch({ toggled: false, user: null })}
 				cursor='pointer'
