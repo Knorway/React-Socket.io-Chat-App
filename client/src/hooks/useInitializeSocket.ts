@@ -39,7 +39,10 @@ export function useInitializeSocket() {
 
 		socket.on('room-add', (data: any) => {
 			dispatch(roomActions.mutateRooms({ data, meta: 'add' }));
-			dispatch(roomActions.setCurrentRoom(data.uuid));
+		});
+
+		socket.on('room-add/changeCurrentRoom', (data: any) => {
+			dispatch(roomActions.setCurrentRoom(data));
 		});
 
 		// USER

@@ -7,9 +7,10 @@ import { IoIosArrowBack } from 'react-icons/io';
 import { IinitialState } from '.';
 import { useAppDispatch, useAppSelector } from '../../../../store';
 import { roomActions } from '../../../../store/room';
+import { IUser } from '../../../../store/user';
 
 interface IUserInfo {
-	userTabUser: any;
+	userTabUser: IUser | null;
 	tabDispatch: Dispatch<IinitialState>;
 }
 
@@ -23,9 +24,7 @@ function UserInfo({ tabDispatch, userTabUser: user }: IUserInfo) {
 	const createRoom = () => {
 		const roomExists = rooms.find(({ users }) => {
 			if (users.length !== 2) return false;
-			return users.every(
-				({ uuid }: { uuid: string }) => uuid === me?.uuid || uuid === user.uuid
-			);
+			return users.every(({ uuid }) => uuid === me?.uuid || uuid === user?.uuid);
 		});
 
 		if (roomExists) {
@@ -34,11 +33,13 @@ function UserInfo({ tabDispatch, userTabUser: user }: IUserInfo) {
 		}
 
 		const socketIds = actives
-			.filter(({ userId }) => userId === me?.uuid || userId === user.uuid)
+			.filter(({ userId }) => userId === me?.uuid || userId === user?.uuid)
 			.map(({ socketId }) => socketId);
 
-		socket?.emit('room-add', { userIds: [me?.uuid, user.uuid], socketIds });
+		socket?.emit('room-add', { userIds: [me?.uuid, user?.uuid], socketIds });
 		// setCurrentRoom 나만
+		// 방제목
+		// mutateMessages()
 	};
 
 	if (!user) return null;

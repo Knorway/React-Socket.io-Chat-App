@@ -1,8 +1,16 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 interface UserState {
-	users: any[];
-	actives: any[];
+	users: IUser[];
+	actives: { userId: string; socketId: string }[];
+}
+
+export interface IUser {
+	uuid: string;
+	socketId: string;
+	name: string;
+	email: string;
+	[key: string]: any;
 }
 
 const initialState: UserState = {

@@ -1,4 +1,5 @@
 import { Box, Flex, Text } from '@chakra-ui/react';
+import { AxiosError } from 'axios';
 import { Form, Formik } from 'formik';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
@@ -38,7 +39,7 @@ const LoginPage = () => {
 					dispatch(authActions.setUser(user));
 					router.push('/');
 				} catch (error) {
-					console.log(error.response.data.message);
+					console.log((error as AxiosError<any>).response!.data.message);
 				} finally {
 					setAuthLoading(false);
 				}

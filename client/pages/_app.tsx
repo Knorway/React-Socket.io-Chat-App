@@ -1,13 +1,14 @@
-import { ChakraProvider } from '@chakra-ui/react';
 import { AppProps } from 'next/dist/shared/lib/router/router';
-import { useInitializeAuth } from '../src/hooks/useInitializeAuth';
+import { ChakraProvider } from '@chakra-ui/react';
 import wrapper from '../src/store';
+import { theme } from '../src/styles';
+import { useInitializeAuth } from '../src/hooks/useInitializeAuth';
 
 function Application({ Component, pageProps }: AppProps) {
 	useInitializeAuth();
 
 	return (
-		<ChakraProvider>
+		<ChakraProvider theme={theme}>
 			<Component {...pageProps} />
 		</ChakraProvider>
 	);

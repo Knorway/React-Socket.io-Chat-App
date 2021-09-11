@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { Box, Flex, Text } from '@chakra-ui/react';
 import { useAppDispatch, useAppSelector } from '../../../store';
-import { roomActions } from '../../../store/room';
+import { IRoom, roomActions } from '../../../store/room';
 
 function RoomSection() {
 	const rooms = useAppSelector((state) => state.room.rooms);
@@ -11,14 +11,12 @@ function RoomSection() {
 	useEffect(() => {
 		if (!rooms.length || currentRoom) return;
 
-		const defaultRoom =
-			localStorage.getItem('defaultRoom') ||
-			rooms.find((room) => room.label === 'open chat');
+		// 타입 다시
+		const defaultRoom = (localStorage.getItem('defaultRoom') ||
+			rooms.find((room) => room.label === 'open chat')) as IRoom;
 
 		dispatch(roomActions.setCurrentRoom(defaultRoom.uuid));
 	}, [currentRoom, dispatch, rooms]);
-
-	// console.log('room');
 
 	return (
 		<Flex

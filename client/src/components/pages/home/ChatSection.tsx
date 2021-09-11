@@ -1,14 +1,13 @@
 import { Box, Flex, IconButton, Input, Text } from '@chakra-ui/react';
 import { KeyboardEventHandler, useEffect, useMemo, useRef, useState } from 'react';
 import { RiSendPlaneFill } from 'react-icons/ri';
-import { useAppDispatch, useAppSelector } from '../../../store';
+import { useAppSelector } from '../../../store';
 
 function ChatSection() {
 	const [input, setInput] = useState('');
 	const socket = useAppSelector((state) => state.socket.socket);
 	const currentRoom = useAppSelector((state) => state.room.current);
 	const rooms = useAppSelector((state) => state.room.rooms);
-	const dispatch = useAppDispatch();
 
 	const inputRef = useRef<HTMLInputElement>(null);
 

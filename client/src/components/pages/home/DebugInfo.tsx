@@ -15,7 +15,7 @@ function DebugInfo() {
 				textAlign='center'
 				display='inline-block'
 			>
-				{`Active users: ${new Set(actives).size}`}
+				{`Active users: ${new Set(actives.map(({ userId }) => userId)).size}`}
 			</Text>
 			<Text
 				as='h1'

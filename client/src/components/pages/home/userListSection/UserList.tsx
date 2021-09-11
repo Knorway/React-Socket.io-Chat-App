@@ -3,9 +3,10 @@ import { Box, Flex } from '@chakra-ui/layout';
 import { Dispatch, Fragment } from 'react';
 import { IinitialState } from '.';
 import { useAppSelector } from '../../../../store';
+import { IUser } from '../../../../store/user';
 
 interface IUserList {
-	users: any[];
+	users: IUser[];
 	tabDispatch: Dispatch<IinitialState>;
 }
 
@@ -16,7 +17,7 @@ function UserList({ users, tabDispatch }: IUserList) {
 
 	return (
 		<>
-			{users.map((user: any) => (
+			{users.map((user) => (
 				<Fragment key={user.uuid}>
 					<Flex flexDir='column'>
 						<Flex

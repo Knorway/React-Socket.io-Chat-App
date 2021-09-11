@@ -1,11 +1,23 @@
 import { createSlice } from '@reduxjs/toolkit';
+import { IUser } from './user';
 
 interface RoomState {
-	rooms: any[];
+	rooms: IRoom[];
 	current: string;
 	messages: any[];
 	lastMessage: string;
 	checked: boolean;
+}
+
+export interface IRoom {
+	[key: string]: any;
+	title: string;
+	label: string;
+	uuid: string;
+	users: IUser[];
+}
+export interface IMessage {
+	//
 }
 
 const initialState: RoomState = {

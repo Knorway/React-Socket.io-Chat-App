@@ -3,13 +3,14 @@ import { Box } from '@chakra-ui/react';
 import { useAppSelector } from '../../../../store';
 import UserInfo from './UserInfo';
 import UserList from './UserList';
+import { IUser } from '../../../../store/user';
 
 export interface IinitialState {
 	toggled: boolean;
-	user: any;
+	user: IUser | null;
 }
-const initialState: IinitialState = { toggled: false, user: null };
 
+const initialState: IinitialState = { toggled: false, user: null };
 const reducer: Reducer<IinitialState, IinitialState> = (prev, curr) => ({
 	...prev,
 	...curr,
