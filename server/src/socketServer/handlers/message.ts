@@ -1,4 +1,3 @@
-import { io } from '../../app';
 import { Message } from '../../entity/Message';
 import { Room } from '../../entity/Room';
 import { mutateMessages } from '../lib/mutate';
@@ -17,10 +16,6 @@ export const add = (socket: SocketIO.Socket) => async (data: any) => {
 
 	await newChat.setRoom(room);
 
-	// io.in(data.roomId).emit('message-add', {
-	// 	roomId: data.roomId,
-	// 	data: newChat,
-	// });
 	const payload = { roomId: data.roomId, data: newChat };
 	mutateMessages(socket, payload, 'add');
 };

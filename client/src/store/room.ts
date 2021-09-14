@@ -17,11 +17,13 @@ export interface IRoom {
 	users: IUser[];
 	messages: IMessage[];
 }
+
 export interface IMessage {
 	uuid: string;
 	message: string;
 	username: string;
 	createdAt: any;
+	user: IUser;
 }
 
 const initialState: RoomState = {
@@ -36,6 +38,9 @@ const roomSlice = createSlice({
 	name: 'room',
 	initialState,
 	reducers: {
+		setCurrentRoom: (state, { payload }) => {
+			state.current = payload;
+		},
 		mutateRooms: (state, { payload }) => {
 			switch (payload.meta) {
 				case 'set':
@@ -44,10 +49,11 @@ const roomSlice = createSlice({
 				case 'add':
 					state.rooms.push(payload.data);
 					return;
+				case 'remove':
+					state.rooms = state.rooms.filter(
+						(room) => room.uuid !== payload.data
+					);
 			}
-		},
-		setCurrentRoom: (state, { payload }) => {
-			state.current = payload;
 		},
 		mutateMessages: (state, { payload }) => {
 			switch (payload.meta) {

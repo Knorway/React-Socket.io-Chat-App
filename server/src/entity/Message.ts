@@ -5,7 +5,7 @@ import { User } from './User';
 
 @Entity()
 export class Message extends BaseModel {
-	@Column()
+	@Column({ type: 'text' })
 	message!: string;
 
 	// -> User

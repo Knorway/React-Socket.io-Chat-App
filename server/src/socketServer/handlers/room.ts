@@ -21,3 +21,18 @@ export const add = (socket: SocketIO.Socket) => async (data: any) => {
 	const payload = { ...newRoom, users };
 	mutateRooms(socket, payload, 'add');
 };
+
+export const remove = (socket: SocketIO.Socket) => async (data: any) => {
+	const targetRoom = await Room.createQueryBuilder('this')
+		.where('this.uuid = :uuid', { uuid: data })
+		.leftJoinAndSelect('this.users', 'users')
+		.getOne();
+
+	if (!targetRoom) {
+		throw new Error('no room found for given room uuid');
+	}
+
+	await Room.remove(targetRoom);
+
+	mutateRooms(socket, data, 'remove');
+};

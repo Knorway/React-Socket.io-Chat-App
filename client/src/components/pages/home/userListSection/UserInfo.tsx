@@ -1,6 +1,6 @@
 import { Dispatch } from 'react';
 import { Avatar } from '@chakra-ui/avatar';
-import { IconButton } from '@chakra-ui/button';
+import { Button, IconButton } from '@chakra-ui/button';
 import { Box, Flex, Text } from '@chakra-ui/layout';
 import { BsFillChatFill } from 'react-icons/bs';
 import { IoIosArrowBack } from 'react-icons/io';
@@ -79,12 +79,16 @@ function UserInfo({ tabDispatch, userTabUser: user }: UserInfo) {
 				></Avatar>
 				<Text mb='4'>{user.name}</Text>
 				<Box>
-					<IconButton
-						aria-label='chat-button'
-						icon={<BsFillChatFill />}
-						borderRadius='50%'
-						onClick={createRoom}
-					/>
+					{user.uuid !== me?.uuid ? (
+						<IconButton
+							aria-label='chat-button'
+							icon={<BsFillChatFill />}
+							borderRadius='50%'
+							onClick={createRoom}
+						/>
+					) : (
+						<Button>프로필 편집</Button>
+					)}
 				</Box>
 			</Flex>
 		</Box>

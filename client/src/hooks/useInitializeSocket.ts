@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import io from 'socket.io-client';
 import { API_URL } from '../api';
 import { useAppDispatch } from '../store';
@@ -41,8 +41,12 @@ export function useInitializeSocket() {
 			dispatch(roomActions.mutateRooms({ data, meta: 'add' }));
 		});
 
-		socket.on('room-add/changeCurrentRoom', (data: any) => {
+		socket.on('room-add/afterEffect-socket', (data: any) => {
 			dispatch(roomActions.setCurrentRoom(data));
+		});
+
+		socket.on('room-remove', (data: any) => {
+			dispatch(roomActions.mutateRooms({ data, meta: 'remove' }));
 		});
 
 		// USER
