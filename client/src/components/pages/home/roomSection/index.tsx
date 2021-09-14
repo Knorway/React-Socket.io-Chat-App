@@ -1,8 +1,8 @@
+import { Flex } from '@chakra-ui/react';
 import { useEffect } from 'react';
-import { Box, Flex, Text } from '@chakra-ui/react';
 import { useAppDispatch, useAppSelector } from '../../../../store';
 import { IRoom, roomActions } from '../../../../store/room';
-import Room from './room';
+import Room from './Room';
 
 function RoomSection() {
 	const rooms = useAppSelector((state) => state.room.rooms);

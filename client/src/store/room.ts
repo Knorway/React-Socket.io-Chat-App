@@ -5,8 +5,6 @@ interface RoomState {
 	rooms: IRoom[];
 	current: string;
 	messages: IMessage[];
-	lastMessage: string;
-	checked: boolean;
 }
 
 export interface IRoom {
@@ -16,12 +14,12 @@ export interface IRoom {
 	uuid: string;
 	users: IUser[];
 	messages: IMessage[];
+	checked?: boolean;
 }
 
 export interface IMessage {
 	uuid: string;
 	message: string;
-	username: string;
 	createdAt: any;
 	user: IUser;
 }
@@ -30,8 +28,6 @@ const initialState: RoomState = {
 	rooms: [],
 	current: '',
 	messages: [],
-	lastMessage: '',
-	checked: false,
 };
 
 const roomSlice = createSlice({
@@ -40,6 +36,13 @@ const roomSlice = createSlice({
 	reducers: {
 		setCurrentRoom: (state, { payload }) => {
 			state.current = payload;
+		},
+		setMsgChecked: (state, { payload }) => {
+			state.rooms.forEach((room) => {
+				if (room.uuid === payload.roomId) {
+					room.checked = false;
+				}
+			});
 		},
 		mutateRooms: (state, { payload }) => {
 			switch (payload.meta) {
@@ -61,6 +64,7 @@ const roomSlice = createSlice({
 					for (const room of state.rooms) {
 						if (room.uuid !== payload.data.roomId) continue;
 						room.messages.push(payload.data.data);
+						room.checked = true;
 						return;
 					}
 			}
