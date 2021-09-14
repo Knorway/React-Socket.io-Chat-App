@@ -7,10 +7,10 @@ import { IRoom, roomActions } from '../../../../store/room';
 
 interface RoomEdit {
 	room: IRoom;
-	checked: boolean | undefined;
+	newMsg: boolean | undefined;
 }
 
-function RoomEdit({ room, checked }: RoomEdit) {
+function RoomEdit({ room, newMsg }: RoomEdit) {
 	const [onEdit, setOnEdit] = useState(false);
 	const socket = useAppSelector((state) => state.socket.socket);
 	const currentRoom = useAppSelector((state) => state.room.current);
@@ -24,6 +24,8 @@ function RoomEdit({ room, checked }: RoomEdit) {
 		const openChat = rooms.find((room) => room.label == 'open chat');
 		dispatch(roomActions.setCurrentRoom(openChat?.uuid));
 	};
+
+	// console.log(newMsg);
 
 	return (
 		<>
@@ -105,7 +107,7 @@ function RoomEdit({ room, checked }: RoomEdit) {
 					</Text>
 				)}
 			</Box>
-			{checked && (
+			{newMsg && (
 				<Box
 					w='8px'
 					h='8px'

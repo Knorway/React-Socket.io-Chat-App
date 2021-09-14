@@ -39,7 +39,7 @@ const roomSlice = createSlice({
 		},
 		setMsgChecked: (state, { payload }) => {
 			state.rooms.forEach((room) => {
-				if (room.uuid === payload.roomId) {
+				if (room.uuid === payload) {
 					room.checked = false;
 				}
 			});

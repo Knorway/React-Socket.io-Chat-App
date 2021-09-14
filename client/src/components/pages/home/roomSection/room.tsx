@@ -1,5 +1,5 @@
 import { Box } from '@chakra-ui/layout';
-import { useMemo } from 'react';
+import { useEffect, useMemo } from 'react';
 import { useAppDispatch, useAppSelector } from '../../../../store';
 import { IRoom, roomActions } from '../../../../store/room';
 import RoomEdit from './RoomEdit';
@@ -19,6 +19,7 @@ function Room({ room }: Room) {
 		() => rooms.find(({ uuid }) => uuid === room.uuid)?.checked,
 		[room.uuid, rooms]
 	);
+
 	const newMsgCondition = useMemo(
 		() =>
 			// 새 메시지가 생성되었고
@@ -29,6 +30,12 @@ function Room({ room }: Room) {
 			room.messages[room.messages.length - 1].user.uuid !== auth?.uuid,
 		[auth?.uuid, checked, currentRoom, room.messages, room.uuid]
 	);
+
+	useEffect(() => {
+		if (checked && currentRoom === room.uuid) {
+			dispatch(roomActions.setMsgChecked(room.uuid));
+		}
+	}, [checked, currentRoom, dispatch, room.uuid]);
 
 	return (
 		<Box
@@ -41,15 +48,15 @@ function Room({ room }: Room) {
 			borderBottomColor='gray.200'
 			cursor='pointer'
 			backgroundColor={currentRoom === room.uuid ? 'gray.100' : 'initial'}
-			onClick={(e) => {
+			onClick={() => {
 				dispatch(roomActions.setCurrentRoom(room.uuid));
-				dispatch(roomActions.setMsgChecked({ roomId: room.uuid }));
+				dispatch(roomActions.setMsgChecked(room.uuid));
 			}}
 			display='flex'
 			justifyContent='space-between'
 		>
 			<RoomHeader room={room} />
-			<RoomEdit room={room} checked={newMsgCondition} />
+			<RoomEdit room={room} newMsg={newMsgCondition} />
 		</Box>
 	);
 }
