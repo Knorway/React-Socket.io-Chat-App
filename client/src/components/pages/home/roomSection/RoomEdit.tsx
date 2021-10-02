@@ -25,8 +25,6 @@ function RoomEdit({ room, newMsg }: RoomEdit) {
 		dispatch(roomActions.setCurrentRoom(openChat?.uuid));
 	};
 
-	// console.log(newMsg);
-
 	return (
 		<>
 			{room.label !== 'open chat' && (
@@ -98,12 +96,16 @@ function RoomEdit({ room, newMsg }: RoomEdit) {
 				justifyContent='space-between'
 				w='90%'
 			>
-				{!onEdit && (
-					<Text fontSize='xs' color='grey'>
-						{`${room.messages[room.messages.length - 1].user.name}:`}
+				{!onEdit && room.messages.length ? (
+					<Text fontSize='xs' color='grey' fontStyle='italic'>
+						{`${room.messages[room.messages.length - 1]?.user.name}:`}
 						<Text as='span' ml='1'>
-							{room.messages[room.messages.length - 1].message}
+							{room.messages[room.messages.length - 1]?.message}
 						</Text>
+					</Text>
+				) : (
+					<Text fontSize='xs' color='grey' fontStyle='italic'>
+						채팅방이 생성되었습니다!
 					</Text>
 				)}
 			</Box>

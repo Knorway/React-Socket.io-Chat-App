@@ -43,7 +43,7 @@ export const disconnect = (socket: SocketIO.Socket) => () => {
 		1
 	);
 
-	mutateActives({ user: socket.user } as SocketIO.Socket, OPEN_CHAT.actives, 'set');
+	mutateActives(<SocketIO.Socket>{ user: socket.user }, OPEN_CHAT.actives, 'set');
 };
 
 export const error = () => (error: any) => {

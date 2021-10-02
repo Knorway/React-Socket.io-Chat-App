@@ -8,13 +8,12 @@ interface RoomState {
 }
 
 export interface IRoom {
-	[key: string]: any;
 	title: string | null;
 	label: string;
 	uuid: string;
 	users: IUser[];
 	messages: IMessage[];
-	checked?: boolean;
+	fresh?: boolean;
 }
 
 export interface IMessage {
@@ -40,7 +39,7 @@ const roomSlice = createSlice({
 		setMsgChecked: (state, { payload }) => {
 			state.rooms.forEach((room) => {
 				if (room.uuid === payload) {
-					room.checked = false;
+					room.fresh = false;
 				}
 			});
 		},
@@ -56,6 +55,7 @@ const roomSlice = createSlice({
 					state.rooms = state.rooms.filter(
 						(room) => room.uuid !== payload.data
 					);
+					return;
 			}
 		},
 		mutateMessages: (state, { payload }) => {
@@ -64,7 +64,7 @@ const roomSlice = createSlice({
 					for (const room of state.rooms) {
 						if (room.uuid !== payload.data.roomId) continue;
 						room.messages.push(payload.data.data);
-						room.checked = true;
+						room.fresh = true;
 						return;
 					}
 			}

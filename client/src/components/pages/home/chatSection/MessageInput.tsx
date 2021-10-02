@@ -9,7 +9,7 @@ function MessageInput() {
 	const inputRef = useRef<HTMLInputElement>(null);
 
 	const submitChat: KeyboardEventHandler<HTMLInputElement> = (e) => {
-		if (e.key !== 'Enter' || !socket) return;
+		if (e.key !== 'Enter' || !socket || !input) return;
 		socket.emit('message-add', { roomId: currentRoom, data: input });
 		setInput('');
 	};

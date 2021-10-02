@@ -1,29 +1,9 @@
-import { useEffect, useMemo, useRef } from 'react';
-import { Box, Flex, IconButton } from '@chakra-ui/react';
+import { Flex, IconButton } from '@chakra-ui/react';
 import { RiSendPlaneFill } from 'react-icons/ri';
-import { useAppSelector } from '../../../../store';
-import Message from './Message';
 import MessageInput from './MessageInput';
+import MessageList from './MessageList';
 
 function ChatSection() {
-	const currentRoom = useAppSelector((state) => state.room.current);
-	const rooms = useAppSelector((state) => state.room.rooms);
-	const chatRef = useRef<HTMLDivElement>(null);
-
-	const thisRoom = useMemo(
-		() => rooms.find((room) => room.uuid === currentRoom),
-		[currentRoom, rooms]
-	);
-	const msgLength = useMemo(
-		() => rooms.find(({ uuid }) => uuid === currentRoom)?.messages.length,
-		[currentRoom, rooms]
-	);
-
-	useEffect(() => {
-		if (!chatRef.current) return;
-		chatRef.current.scrollTop = chatRef.current.scrollHeight;
-	}, [currentRoom, msgLength]);
-
 	return (
 		<Flex
 			border='1px solid'
@@ -35,11 +15,7 @@ function ChatSection() {
 			justifyContent='space-between'
 			h='100%'
 		>
-			<Box ref={chatRef} overflow='auto'>
-				{thisRoom?.messages?.map((msg) => (
-					<Message msg={msg} key={msg.uuid} />
-				))}
-			</Box>
+			<MessageList />
 			<Flex borderTop='1px solid' borderTopColor='gray.400' borderTopRadius='none'>
 				<MessageInput />
 				<IconButton

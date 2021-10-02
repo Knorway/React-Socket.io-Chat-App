@@ -1,5 +1,5 @@
-import { Box } from '@chakra-ui/layout';
 import { useEffect, useMemo } from 'react';
+import { Box } from '@chakra-ui/layout';
 import { useAppDispatch, useAppSelector } from '../../../../store';
 import { IRoom, roomActions } from '../../../../store/room';
 import RoomEdit from './RoomEdit';
@@ -15,27 +15,28 @@ function Room({ room }: Room) {
 	const rooms = useAppSelector((state) => state.room.rooms);
 	const dispatch = useAppDispatch();
 
-	const checked = useMemo(
-		() => rooms.find(({ uuid }) => uuid === room.uuid)?.checked,
+	const fresh = useMemo(
+		() => rooms.find(({ uuid }) => uuid === room.uuid)?.fresh,
 		[room.uuid, rooms]
 	);
 
 	const newMsgCondition = useMemo(
 		() =>
 			// 새 메시지가 생성되었고
-			checked &&
+			fresh &&
 			// 현재 참여하고 있는 방이 아니고
 			currentRoom !== room.uuid &&
 			// 내가 보낸 메시지가 아닐 경우에 새 메시지 알람을 표시한다
 			room.messages[room.messages.length - 1].user.uuid !== auth?.uuid,
-		[auth?.uuid, checked, currentRoom, room.messages, room.uuid]
+		[auth?.uuid, fresh, currentRoom, room.messages, room.uuid]
 	);
 
+	// [main 56f1682] fix: 다른 방에 진입했을 시 참여하고 있던 방의 새 메시지 알림이 뜨던 버그 수정
 	useEffect(() => {
-		if (checked && currentRoom === room.uuid) {
+		if (fresh && currentRoom === room.uuid) {
 			dispatch(roomActions.setMsgChecked(room.uuid));
 		}
-	}, [checked, currentRoom, dispatch, room.uuid]);
+	}, [fresh, currentRoom, dispatch, room.uuid]);
 
 	return (
 		<Box

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import io from 'socket.io-client';
 import { API_URL } from '../api';
 import { useAppDispatch } from '../store';
